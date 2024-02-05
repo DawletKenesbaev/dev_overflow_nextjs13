@@ -3,12 +3,13 @@ import './globals.css'
 import React from 'react'
 import {Inter,Space_Grotesk} from 'next/font/google';
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/context/ThemeProvider';
 
 export const metadata:Metadata = {
   title: 'Dev OverFlow',
   description: 'A community driven platform for asking and answering programming questions.Share knowledge and collabrate with developers around the world .Explore topics in web development ,mobile app development , algorithms , data structure and more .',
   icons: {
-    icon: '/public/assets/images/site-logo.svg'
+    icon: '/assets/images/site-logo.svg'
   }
 }
 const inter = Inter({
@@ -27,19 +28,21 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider
-      appearance={{
-        elements: {
-          formButtonPrimary: 'primary-gradient',
-          footerActionLink:'primary-text-gradient hover:text-primary-500'
-        }
-      }}
-    >
       <html lang="en">
-        <body className={`${inter.variable} ${spaceGrotesk.variable}`}>          
-          {children}
+        <body className={`${inter.variable} ${spaceGrotesk.variable}`}> 
+          <ClerkProvider
+            appearance={{
+              elements: {
+                formButtonPrimary: 'primary-gradient',
+                footerActionLink:'primary-text-gradient hover:text-primary-500'
+              }
+             }}
+             >
+              <ThemeProvider>
+                {children}
+              </ThemeProvider>     
+            </ClerkProvider>    
         </body>
       </html>
-    </ClerkProvider>
   )
 }
