@@ -1,4 +1,4 @@
-<h1>DEVOVERFLOW</h1>
+<h1>DevOverFlow</h1>
 
 <p>
 A community driven platform for asking and answering programming questions. <br/>
@@ -6,7 +6,7 @@ Share knowledge and collabrate with developers around the world . <br />
 Explore topics in web development ,mobile app development , algorithms , data structure and more .
 </p>
 
-<h2>Used langauges and tools</h2>
+<h2>Used languages and tools</h2>
 <ul>
   <li>Typescript</li>
     <li>NextJS</li>
