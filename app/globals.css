@@ -49,9 +49,6 @@ body {
                 .tab {
                     @apply min-h-full dark:bg-dark-400 bg-light-800 text-light-5
                     }
-                    .no-focus {
-                        @apply focus-visible:ring-0 focus-visible:ring-transparent focus
-                        }
                     
     }
 
@@ -134,4 +131,8 @@ display: none;
 .no-scrollbar {
 -ms-overflow-style: none; /* IE and Edge */
 scrollbar-width: none; /* Firefox */
+}
+.no-focus {
+    outline: 0 !important;
+    box-shadow: none !important;
 }

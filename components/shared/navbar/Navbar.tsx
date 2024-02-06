@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import Theme from './Theme'
 import MobileNav from './MobileNav'
+import GlobalSearch from '../search/GlobalSearch'
 
 const Navbar = () => {
   return (
@@ -16,10 +17,10 @@ const Navbar = () => {
              height={23}
             />
             <p className='h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden'>
-             Dev <span className='text-primary-500'>OverFlow</span>
+             Dev<span className='text-primary-500 '>OverFlow</span>
             </p>
         </Link>
-        Search
+        <GlobalSearch />
         <div className='flex-between gap-5'>
              <Theme /> 
              <SignedIn>

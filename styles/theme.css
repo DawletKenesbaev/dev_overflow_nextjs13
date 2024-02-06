@@ -132,9 +132,6 @@
     .subtle-regular {
     @apply text-[10px] font-normal leading-[13px];
     }
-    .placeholder {
-    @apply placeholder:text-light-400 dark:placeholder:text-light-
-    }
     .invert-colors {
     @apply invert dark:invert-0;
     }
@@ -155,3 +152,12 @@
     );
     }
     }
+
+        .placeholder {
+            color: #4a5560; 
+        }
+        
+        .dark .placeholder {
+            color: #A0AEC0; 
+        }
+        
