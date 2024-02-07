@@ -4,17 +4,17 @@ import React from 'react'
 import RenderTags from './RenderTags'
 
 const questions = [
-    {id:0,title:'best practise for fetching data Nextjs applicatidering ssr'},
-    {id:1,title:'best practise for fetching data Nextjs application rendering ssr'},
-    {id:2,title:'best practise for fetching data Nextjs applndering ssr'},
-    {id:3,title:'best practise for fetching data Nextjs applendering ssr'},
-    {id:4,title:'best data Nextjs application rendering ssr'}
+    {_id:'0',title:'best practise for fetching data Nextjs applicat_ideing ssr'},
+    {_id:'1',title:'best practise for fetching data Nextjs application rendering ssr'},
+    {_id:'2',title:'best practise for fetching data Nextjs applndering ssr'},
+    {_id:'3',title:'best practise for fetching data Nextjs applendering ssr'},
+    {_id:'4',title:'best data Nextjs application rendering ssr'}
 ]
 const popularTags =[
-  {id:1,title:'Javascript',totalQuestions:12},
-  {id:2,title:'Reactjs',totalQuestions:9},
-  {id:3,title:'Redux',totalQuestions:2},
-  {id:4,title:'Nextjs',totalQuestions:4}
+  {_id:'1',title:'Javascript',totalQuestions:12},
+  {_id:'2',title:'Reactjs',totalQuestions:9},
+  {_id:'3',title:'Redux',totalQuestions:2},
+  {_id:'4',title:'Nextjs',totalQuestions:4}
 
 
 ]
@@ -29,8 +29,8 @@ const RIghtSideBar = () => {
             <div className='mt-7 flex w-full flex-col gap-[30px]'>
                {questions.map((item)=>(
                 <Link 
-                href={`/questions/${item.id}`}
-                key={item.id}
+                href={`/questions/${item._id}`}
+                key={item._id}
                 className='flex cursor-pointer items-center
                 justify-between gap-7' 
                 >
@@ -52,7 +52,7 @@ const RIghtSideBar = () => {
             <div className='mt-7 flex flex-col gap-4'>
               {
                 popularTags.map((tag)=>(
-                   <RenderTags key={tag.id} id={tag.id} title={tag.title} totalQuestions={tag.totalQuestions}/>
+                   <RenderTags key={tag._id} _id={tag._id} title={tag.title} totalQuestions={tag.totalQuestions}/>
                 ))
               }
             </div>
