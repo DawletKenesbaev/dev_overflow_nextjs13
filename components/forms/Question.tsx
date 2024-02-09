@@ -14,18 +14,25 @@ import {
 import { Input } from "@/components/ui/input"
 import { questionSchema } from "@/lib/validation"
 
+import {LoadingOutlined } from '@ant-design/icons'
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
+import { createQuestion } from '@/lib/actions/question.action';
+import { useRouter ,usePathname} from 'next/navigation';
 
+interface Props {
+  mongoUserId:string
+}
 
-const Question = () => {
-     const [tags, setTags] = useState<string[]>([]);
+const Question = ({mongoUserId}:Props) => {
     const editorRef = useRef(null);
-    const register = useRef('');
-
+    const [isSubmitting,setIsSubmitting] = useState(false)
+    const router = useRouter()
+    const pathname = usePathname()
     const form = useForm<z.infer<typeof questionSchema>>({
         resolver: zodResolver(questionSchema),
         defaultValues: {
@@ -34,79 +41,50 @@ const Question = () => {
           tags: [],
         },
       })
-    
-      // 2. Define a submit handler.
-      function onSubmit(values: z.infer<typeof questionSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
-      }
-
-  // const handleInputDown = (e :React.KeyboardEvent<HTMLInputElement>
-  //   ,field:any) => {
-  //     if (e.key === 'Enter' && field.name ==='tags') {
-  //        e.preventDefault()
-  //        const tagInput = e.target as HTMLInputElement;
-  //        const tagValue = tagInput.value.trim()                  
-  //        if (tagValue !== '') {
-  //          if (tagValue.length>15) {
-  //            return form.setError('tags',{  
-  //             type:'required',
-  //             message: 'Tag must be less than 15 characters.'
-  //            })
-  //          } 
-          
-                   
-  //          const fieldArray: string[] = [];
-  //            if (fieldArray.includes(tagValue)) {
-  //             fieldArray.push(tagValue)           
-  //             form.setValue('tags', [...fieldArray])
-  //             form.clearErrors('tags')  
-  //             tagInput.value =''
-  //             console.log('click');
-
-  //          }
-          
-  //        }
-  //        else {
-  //         form.trigger()
-  //        }
-         
-  //     }
-  // }
-  const handleInputDown = (e:React.KeyboardEvent<HTMLInputElement>,field: any) => {
+async function onSubmit(values: z.infer<typeof questionSchema>) {   
+   setIsSubmitting(true);
+   try {
+      await  createQuestion({
+        title:values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+        path:pathname
+        
+      })
+      router.push('/')
+   } catch (error) {
+     console.log('error',error);
+     
+   } finally  {
+    setIsSubmitting(false)
+   }
+}
+const handleInputDown = (e:React.KeyboardEvent<HTMLInputElement>,field: any) => {
     if (e.key === 'Enter' && e.target && field.name === 'tags') {
+        e.preventDefault();
         const tagInput = e.target as HTMLInputElement;
         const tagValue = tagInput.value.trim();
-        e.preventDefault();
-        setTags([...tags,tagValue])
-        console.log(tagInput.value);
-
-        tagInput.value =''
-        register.current=''
-        // if (tagValue !== '') {
-        //     if (tagValue.length > 15) {
-        //         return form.setError('tags', {
-        //             type: 'required',
-        //             message: 'Tag must be less than 15 characters.'
-        //         });
-        //     }    
-        //     console.log(field.value);
-                    
-        //     if (!field.value.includes(tagValue)) {
-        //         setTags([...tags, tagValue]);
-        //         form.setValue('tags', [...field.value, tagValue]);
-        //         tagInput.value = ''; 
-        //         form.clearErrors('tags');
-                
-        //     } else {
-        //         console.log('Tag value is already included:', tagValue);
-        //     }
-        // } else {
-        //     form.trigger();
-        // }
+        if (tagValue.length>15) {
+          return form.setError('tags', 
+          {
+            type: 'required',
+            message: 'Tag must be at least 15 characters.'
+          }
+          )
+        }
+        if (!field.value.includes(tagValue as never)) {
+          form.setValue('tags',[...field.value,tagValue])
+          tagInput.value = ''
+          form.clearErrors('tags')
+        }
+        form.trigger()
     }
 };
+const handleTagRemove =(tag:string,field:any) => {
+   const newTags  = field.value.filter((t:string) =>  t!== tag)
+   form.setValue('tags', newTags)
+}
   return (
     <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)}
@@ -147,7 +125,9 @@ const Question = () => {
                 onInit={(evt, editor) =>
                    // @ts-ignore
                    (editorRef.current = editor)}
-                initialValue="<p>This is the initial content of the editor.</p>"
+                initialValue="<p></p>"
+                onBlur={field.onBlur}
+                onEditorChange={(content) => field.onChange(content)}
                 init={{
                 height: 350,
                 menubar: false,
@@ -181,14 +161,18 @@ const Question = () => {
               <>
               <Input 
               className="no-focus paragraph-regular background-light700_dark300
-              light-border-2 text-dark300_light900  min-h-[50px] border" {...field} placeholder="Add tags..."
+              light-border-2 text-dark300_light900  min-h-[50px] border" placeholder="Add tags..."
               onKeyDown={(e) => handleInputDown(e,field)}
               />
                
-                 {Array.isArray(tags) && tags.length > 0 && (
+                 {Array.isArray(field.value) && field.value.length > 0 && (
                   <div className='flex-start mt-3 gap-3'>
-                    {tags.map((tag) => (
-                      <Badge key={tag}>
+                    {field.value.map((tag) => (
+                      <Badge key={tag} className='subtle-regular background-light800_dark300
+                      text-light400_light500 items-center justify-center gap-2 rounded-md border-none
+                      px-4 py-2 capitalize'
+                      onClick={() => handleTagRemove(tag,field)}
+                      >
                         {tag}
                         <Image
                           src='/assets/icons/close.svg'
@@ -211,7 +195,14 @@ const Question = () => {
           </FormItem>
         )}
       />
-      <Button type="submit">Submit</Button>
+      <Button type="submit" className='primary-gradient w-[100px] !text-light-900'
+      disabled={isSubmitting}
+
+      >
+        {
+          isSubmitting ? <LoadingOutlined /> : ' Submit'
+        }
+       </Button>
     </form>
   </Form>
   )

@@ -5,27 +5,15 @@ import NoResults from "@/components/shared/NoResults";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
  
 
-
-const questions = [
-  {
-    _id: 1,
-    title: 'Best practices for data fetching in a Next.js application',
-    tags: [{ _id: '1', name: 'nextjs' }, { _id: '2', name: 'js' }],
-    author: {
-      _id: '123',
-      name: 'Derek Joush',
-      picture: 'path/to/picture.jpg'
-    },
-    upvotes: 12,
-    views: 1200,
-    answers: [{ answerId: 1, text: 'Sample answer' }], // Example of answer object
-    createdAt: new Date('2024-01-01') // Example date
-  }
-];
-export default function Home() {
+ 
+export default async function Home() {
+  const results = await getQuestions({});
+  console.log(results.questions);
+  
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -53,8 +41,8 @@ export default function Home() {
          <HomeFilters />
          <div className="mt-5">
             {
-              questions.length>0
-              ? questions.map((item) => (
+              results.questions.length>0
+              ? results.questions.map((item) => (
                 <QuestionCards
                 key={item._id}
                 _id={item._id}
