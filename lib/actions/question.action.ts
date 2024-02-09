@@ -23,7 +23,6 @@ export async function getQuestions(params: GetQuestionsParams ) {
 export async function createQuestion(params:CreateQuestionParams) {
     try {
         connectToDatabase()
-        
         const {title,content,tags, author, path} = params; 
         const question = await Question.create({
             title,
@@ -42,10 +41,13 @@ export async function createQuestion(params:CreateQuestionParams) {
         await Question.findByIdAndUpdate(question._id,{
             $push : {tags: {$each : tagDocuments}}
         });
+            console.log('ddd');
         revalidatePath(path)
-        // IT ISNT WORKING REVALIDATEPATH
+        console.log('ggg');
+
         
     } catch (error) {
-
+      console.log(error);
+      
     }
 }
