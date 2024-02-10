@@ -16,6 +16,7 @@ export default async function Home() {
   };
   const result = await getQuestions({});
   const results = result ?? defaultValue;
+  console.log(results);
   
   return (
     <>
