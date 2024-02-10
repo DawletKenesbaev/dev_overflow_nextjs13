@@ -41,11 +41,7 @@ export async function createQuestion(params:CreateQuestionParams) {
         await Question.findByIdAndUpdate(question._id,{
             $push : {tags: {$each : tagDocuments}}
         });
-            console.log('ddd');
-        revalidatePath(path)
-        console.log('ggg');
-
-        
+        revalidatePath(path)      
     } catch (error) {
       console.log(error);
       

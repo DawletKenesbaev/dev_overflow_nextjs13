@@ -11,7 +11,11 @@ import Link from "next/link";
 
  
 export default async function Home() {
-  const results = await getQuestions({});
+  const defaultValue = {
+    questions: []
+  };
+  const result = await getQuestions({});
+  const results = result ?? defaultValue;
   
   return (
     <>
@@ -39,9 +43,10 @@ export default async function Home() {
          </div>
          <HomeFilters />
          <div className="mt-5">
+        
             {
-              results.questions.length>0
-              ? results.questions.map((item) => (
+              results?.questions.length>0
+              ? results?.questions.map((item) => (
                 <QuestionCards
                 key={item._id}  
                 _id={item._id}

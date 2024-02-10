@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import React from 'react'
@@ -12,6 +13,7 @@ export const metadata:Metadata = {
     icon: '/assets/images/site-logo.svg'
   }
 }
+
 
 
 const inter = Inter({
