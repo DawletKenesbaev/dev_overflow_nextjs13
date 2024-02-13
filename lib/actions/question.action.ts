@@ -33,7 +33,7 @@ export async function createQuestion(params:CreateQuestionParams) {
         for (const tag of tags) {
             const existingTag = await Tag.findOneAndUpdate(
                 {name: { $regex: new RegExp(`^${tag}$`, 'i')}},
-                { $setOnInser:{name:tag}, $push: {question: question._id}},
+                { $setOnInsert:{name:tag}, $push: {question: question._id}},
                 { upsert:true , new:true }
             )     
             tagDocuments.push(existingTag._id)
@@ -41,7 +41,7 @@ export async function createQuestion(params:CreateQuestionParams) {
         await Question.findByIdAndUpdate(question._id,{
             $push : {tags: {$each : tagDocuments}}
         });
-        revalidatePath(path)      
+        revalidatePath(path)
     } catch (error) {
       console.log(error);
       
