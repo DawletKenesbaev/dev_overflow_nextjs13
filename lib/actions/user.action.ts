@@ -13,7 +13,7 @@ export async function getUserById(params:any) {
         const user = await  User.findOne({clerkId:userId});
         return user
     } catch (error) {
-         console.log('error', error);
+         console.log('error', error); 
          throw error
     }
 }
