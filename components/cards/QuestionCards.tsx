@@ -23,7 +23,6 @@ createdAt: Date;
 
 // author={_id:'1',name:'Dawlet',picture:'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
 const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt}:QuestionCardsProps) => {
-   const author2={_id:'1',name:'Dawlet',picture:'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
   return ( 
     <div className='card-wrapper   rounded-[10px] p-9 sm:px-11'>
          <div className='flex
@@ -46,11 +45,11 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt}:Q
          </div>
          <div className='flex-between mt-6 w-full flex-wrap gap-3'>
              <Metric
-             imgUrl={'/assets/icons/avatar.svg'}
+             imgUrl={author.picture}
              alt='user'
-             value={author2.name}
+             value={author.name}
              title={` - asked ${getTimeStap(createdAt)}`}
-             href={`/profile${author2._id}`}
+             href={`/profile${author._id}`}
              isAuthor
              textStyles='body-medium text-dark400_light700'
               />
