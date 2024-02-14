@@ -23,12 +23,14 @@ import { Badge } from '../ui/badge';
 import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
 import { useRouter ,usePathname} from 'next/navigation';
+import { useTheme } from '@/context/ThemeProvider';
 
 interface Props {
   mongoUserId:string
 }
 
 const Question = ({mongoUserId}:Props) => {
+    const {mode} = useTheme()
     const editorRef = useRef(null);
     const [isSubmitting,setIsSubmitting] = useState(false)
     const router = useRouter()
@@ -137,6 +139,8 @@ const handleTagRemove =(tag:string,field:any) => {
                 toolbar: 'undo redo |' +
                 'codesample | bold italic forecolor | alignleft aligncenter ' +
                 'alignright alignjustify | bullist numlist ',
+                skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
+                content_css: mode==='dark' ? 'dark': 'light',
                 content_style: 'body { font-family:Inter; font-size:17px }'
                 }}
                 />
