@@ -1,9 +1,12 @@
 import Answer from '@/components/forms/Answer';
+import AllAnswer from '@/components/shared/AllAnswer';
 import Metric from '@/components/shared/Metric';
 import ParseHTML from '@/components/shared/ParseHTML';
 import RenderTags from '@/components/shared/RenderTags';
 import { getQuestionById } from '@/lib/actions/question.action'
+import { getUserById } from '@/lib/actions/user.action';
 import { formatNumber, getTimeStap } from '@/lib/utils';
+import { auth } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
@@ -11,7 +14,12 @@ import React from 'react'
 const page = async ({params}:any) => {
     const result = await getQuestionById({questionId:params.id})
     console.log(result);
-    
+    const {userId:clerkId } = auth()
+
+    let mongoUser;
+    if(clerkId) {
+      mongoUser = await getUserById({userId:clerkId})
+    }
   return (
     <>
      <div className='flex-start w-full flex-col'>
@@ -62,15 +70,28 @@ const page = async ({params}:any) => {
              textStyles='small-medium text-dark400_light800'
               />
      </div>
-     <ParseHTML data={result.content} />
-     <div className='mt-8 flex flex-wrap gap-2'>
+     <div className='w-fit'>
+      <ParseHTML data={result.content} />
+     </div>
+     <div className='mt-8   flex flex-wrap gap-2'>
        {
         result.tags.map((tag:any)=>(
           <RenderTags key={tag._id} _id={tag._id} title={tag.name}  showCount={false} />
         ))
        }
      </div>
-     <Answer />
+     <AllAnswer
+      questionId={result._id}
+      userId={JSON.stringify(mongoUser._id)}
+      totalAnswers={result.answers.length}
+      filter={23}
+
+      />
+     <Answer
+      question={result.content}
+      questionId={JSON.stringify(result._id)}
+      authorId={JSON.stringify(mongoUser._id)}
+       />
     </>
   )
 }
