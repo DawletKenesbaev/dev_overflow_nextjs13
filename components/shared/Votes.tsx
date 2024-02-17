@@ -1,10 +1,12 @@
 'use client'
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
+import { viewQuestion } from '@/lib/actions/interaction.action';
 import { downvoteQuestion, upvoteQuestion } from '@/lib/actions/question.action';
+import { toggleSavedQuestion } from '@/lib/actions/user.action';
 import { formatNumber } from '@/lib/utils';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import React from 'react'
+import { usePathname ,useRouter } from 'next/navigation';
+import React, { useEffect } from 'react'
 interface Props {
   type:string;
   itemId:string;
@@ -17,7 +19,16 @@ interface Props {
 }
 const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasupVoted}:Props) => {
   const pathname = usePathname()
-  const handleSave =() =>{
+  const router = useRouter()
+  const handleSave =async () =>{
+    console.log('clicked');
+
+    await toggleSavedQuestion({
+      userId:JSON.parse(userId),
+      questionId:JSON.parse(itemId),
+      path:pathname
+    })
+    
 
   }
   const handleVote =async  (votetype:string) => {
@@ -64,6 +75,14 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
       }
     }
   }
+  useEffect(() => {
+   viewQuestion({
+    questionId:JSON.parse(itemId),
+    userId:userId ? JSON.parse(userId): undefined,
+
+   })
+  }, [itemId,userId,pathname ,router])
+    
   return (
     <div className='flex gap-5'>
       <div className='flex-center gap-3'>
@@ -118,7 +137,7 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
           height={18}
           alt='star'
           className='cursor-pointer'
-          onClick={ () => handleSave}
+          onClick={handleSave}
           /> 
       }
       

@@ -15,7 +15,7 @@ interface Props {
         value:string,
     }[];
     otherClasses: string,
-    containerClasses:string
+    containerClasses?:string
 }
 const Filters = ({filters,otherClasses,containerClasses}:Props) => {
   return (
