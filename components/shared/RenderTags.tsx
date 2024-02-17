@@ -13,7 +13,7 @@ const RenderTags = ({title,totalQuestions,_id,showCount=true}
     :Props) => {
   return (
     <Link
-    href={`/tags${_id}`}
+    href={`/tags/${_id}`}
     className='flex justify-between gap-2'
      >
         <Badge className='subtle-medium background-light800_dark300

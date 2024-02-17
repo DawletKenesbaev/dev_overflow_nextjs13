@@ -21,7 +21,6 @@ answers: Array<object>;
 createdAt: Date;
 }
 
-// author={_id:'1',name:'Dawlet',picture:'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
 const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt}:QuestionCardsProps) => {
   return ( 
     <div className='card-wrapper   rounded-[10px] p-9 sm:px-11'>
