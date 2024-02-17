@@ -44,3 +44,23 @@ export const formatNumber = (num: number): string => {
     return num.toString(); // Default to string representation if not within range
   }
 };
+export function getJoinedDate(date: Date): string {
+  // Define an array of month names
+  const monthNames: string[] = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Get the month and year from the date object
+  const monthIndex: number = date.getMonth();
+  const year: number = date.getFullYear();
+
+  // Get the month name using the month index
+  const monthName: string = monthNames[monthIndex];
+
+  // Create a string representing the joined date
+  const joinedDate: string = `${monthName} ${year}`;
+
+  return joinedDate;
+}
+

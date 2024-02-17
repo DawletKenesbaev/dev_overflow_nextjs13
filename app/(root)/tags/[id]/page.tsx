@@ -19,7 +19,7 @@ const Page = async ({params,searchParams}:URLProps) => {
     <div className="mt-11 w-full">
           <LocalSearchBar
            route ='/'
-           placeholder='Search questions...'
+           placeholder='Search tag questions...'
            imgSrc='/assets/icons/search.svg'
            iconPosition="left"
            otherClasses ='flex-1'
@@ -29,8 +29,11 @@ const Page = async ({params,searchParams}:URLProps) => {
     <div className="mt-5">
        {
          result?.questions.length>0
-         ? result?.questions.map((item:IQuestion) => (
-           <QuestionCards
+         ? result?.questions.map((item:IQuestion) => {
+          
+          // const authorData = { _id: item.author._id, name: item.author.name, picture: item.author.picture };
+          // const tagsData ={_id :item.tags._id,name:item.tags}
+          return  <QuestionCards
            key={item._id}  
            _id={item._id}
            title={item.title}
@@ -41,9 +44,9 @@ const Page = async ({params,searchParams}:URLProps) => {
            answers={item.answers}
            createdAt={item.createdAt}
             />
-         ))
+          })
          : <NoResults 
-         title='There is no saved questions to show' 
+         title='There is no tag questions to show' 
          description='Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡'
          />
        }

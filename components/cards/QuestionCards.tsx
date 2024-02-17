@@ -48,7 +48,7 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt}:Q
              alt='user'
              value={author.name}
              title={` - asked ${getTimeStap(createdAt)}`}
-             href={`/profile${author._id}`}
+             href={`/profile/${author._id}`}
              isAuthor
              textStyles='body-medium text-dark400_light700'
               />
