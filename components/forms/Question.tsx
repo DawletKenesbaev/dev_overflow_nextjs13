@@ -36,19 +36,7 @@ const Question = ({mongoUserId,type,questionDetails}:Props) => {
     const [isSubmitting,setIsSubmitting] = useState(false)
     const router = useRouter()
     const pathname = usePathname()
-    let parsedQuestionDetails:any;
-    if (questionDetails && questionDetails.trim() !== '') {
-        try {
-            parsedQuestionDetails = JSON.parse(questionDetails);
-        } catch (error) {
-            // Handle JSON parsing error
-            console.error('Error parsing JSON:', error);
-        }
-    } else {
-        // Handle case when questionDetails is empty or undefined
-        console.warn('Empty or undefined JSON input');
-    }
-
+    const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails)
     const groupTags = parsedQuestionDetails?.tags.map((tag:any) => tag.name)
     const form = useForm<z.infer<typeof questionSchema>>({
         resolver: zodResolver(questionSchema), 
