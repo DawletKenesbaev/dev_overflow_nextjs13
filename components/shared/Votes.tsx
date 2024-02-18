@@ -21,7 +21,6 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
   const pathname = usePathname()
   const router = useRouter()
   const handleSave =async () =>{
-    console.log('clicked');
 
     await toggleSavedQuestion({
       userId:JSON.parse(userId),

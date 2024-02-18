@@ -2,7 +2,7 @@
 import { FilterQuery } from "mongoose";
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose"
-import { CreateUserParams, DeleteUserParams, GetAllUsersParams, GetSavedQuestionsParams, GetUserByIdParams, ToggleSaveQuestionParams, UpdateUserParams } from "./shared.types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, GetSavedQuestionsParams, GetUserByIdParams, GetUserStatsParams, ToggleSaveQuestionParams, UpdateUserParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
@@ -69,8 +69,17 @@ export async function deleteUser(params:DeleteUserParams) {
 export async function getAllUsers(params:GetAllUsersParams) {
     try {
         connectToDatabase();
-        // const {page=1,pageSize=20,filter,search} = params;
-        const users = await User.find({}).sort({createdAt: -1})
+        const {searchQuery} = params;
+
+        const query: FilterQuery<typeof User> ={}
+        if (searchQuery) {
+            query.$or =[
+                {name:{$regex : new RegExp(searchQuery, 'i')}},
+                {username:{$regex : new RegExp(searchQuery, 'i')}}
+
+            ]
+        }
+        const users = await User.find(query).sort({createdAt: -1})
         
         return users
     } catch (error) {
@@ -159,6 +168,42 @@ export async function getUserInfo(params:GetUserByIdParams) {
             totalAnswers,
             totalQuestions
         }
+    } catch (error) {
+        console.log(error);
+        throw(error)
+        
+    }
+}
+export async function getUserQuestions(params:GetUserStatsParams) {
+    try {
+        connectToDatabase()
+        const {userId} = params
+        const totalQuestions =  await Question.countDocuments({author:userId})
+
+        const userQuestions = await Question.find({author:userId}).sort({views:-1,upvotes:-1})
+        .populate('tags','_id name')
+        .populate('author','_id clerkId name picture')
+
+        return {totalQuestions,question:userQuestions  }
+
+    } catch (error) {
+        console.log(error);
+        throw(error)
+        
+    }
+}
+export async function getUserAnswers(params:GetUserStatsParams) {
+    try {
+        connectToDatabase()
+        const {userId} = params
+        const totalAnswers =  await Answer.countDocuments({author:userId})
+
+        const userAnswers = await Answer.find({author:userId}).sort({upvotes:-1})
+        .populate('question','_id title')
+        .populate('author','_id clerkId name picture')
+
+        return {totalAnswers,answers:userAnswers  }
+
     } catch (error) {
         console.log(error);
         throw(error)

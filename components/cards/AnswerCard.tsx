@@ -1,32 +1,28 @@
 import Link from 'next/link';
 import React from 'react'
-import RenderTags from '../shared/RenderTags';
 import Metric from '../shared/Metric';
 import { formatNumber, getTimeStap } from '@/lib/utils';
 import { SignedIn } from '@clerk/nextjs';
 import EditDeleteAction from '../shared/EditDeleteAction';
-interface QuestionCardsProps {
+interface Props {
 _id: number;
-title: string;
-tags: {
-    _id: string;
-    name: string;
-}[];
 author: {
     _id:string;
     name:string;
     picture: string;
 };
+question: {
+    _id:string,
+    title:string;
+};
 upvotes: number;
-views: number;
-answers: Array<object>;
 createdAt: Date;
 clerkId?:string | null;
 }
 
-const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,clerkId}:QuestionCardsProps) => {
+const AnswerCard = ({_id,question,author,upvotes,createdAt,clerkId}:Props) => {    
   const showActionButtons = clerkId && clerkId === author.clerkId
-  
+
   return ( 
     <div className='card-wrapper   rounded-[10px] p-9 sm:px-11'>
          <div className='flex
@@ -38,22 +34,17 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,cl
             </span> 
             <Link href={`/question/${_id}`}>
                <h3 className='sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1'>
-                {title}
+                {question.title}
                </h3>
-            </Link>  
-          <SignedIn>
+            </Link> 
+            <SignedIn>
               {showActionButtons &&(
                 <EditDeleteAction
-                 type='Question'
+                 type='Answer'
                  itemId = {JSON.stringify(_id)}
                  />
               )}
-          </SignedIn> 
-         </div>
-         <div className='mt-4 flex flex-wrap gap-2'>
-             {tags.map((tag) => (
-                <RenderTags key={tag._id} _id={tag._id} title={tag.name} />
-             ))}
+          </SignedIn>  
          </div>
          <div className='flex-between mt-6 w-full flex-wrap gap-3'>
              <Metric
@@ -72,23 +63,9 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,cl
              title=' Votes'
              textStyles='small-medium text-dark400_light800'
               />
-              <Metric
-             imgUrl='/assets/icons/message.svg'
-             alt='answers'
-             value={formatNumber(answers.length)}
-             title=' Answers'
-             textStyles='small-medium text-dark400_light800'
-              />
-              <Metric
-             imgUrl='/assets/icons/eye.svg'
-             alt='Views'
-             value={formatNumber(views)}
-             title=' Views'
-             textStyles='small-medium text-dark400_light800'
-              />
          </div>
     </div>
   )
 }
 
-export default QuestionCards
+export default AnswerCard

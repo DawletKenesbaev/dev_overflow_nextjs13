@@ -14,38 +14,64 @@ import {
 import { Input } from "@/components/ui/input"
 import { questionSchema } from "@/lib/validation"
 
-import {LoadingOutlined } from '@ant-design/icons'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
-import { createQuestion } from '@/lib/actions/question.action';
+import { createQuestion, editQuestion } from '@/lib/actions/question.action';
 import { useRouter ,usePathname} from 'next/navigation';
 import { useTheme } from '@/context/ThemeProvider';
 
 interface Props {
+  type?:string;
+  questionDetails?: string;
   mongoUserId:string
 }
 
-const Question = ({mongoUserId}:Props) => {
+const Question = ({mongoUserId,type,questionDetails}:Props) => {
     const {mode} = useTheme()
     const editorRef = useRef(null);
     const [isSubmitting,setIsSubmitting] = useState(false)
     const router = useRouter()
     const pathname = usePathname()
+    let parsedQuestionDetails:any;
+    if (questionDetails && questionDetails.trim() !== '') {
+        try {
+            parsedQuestionDetails = JSON.parse(questionDetails);
+        } catch (error) {
+            // Handle JSON parsing error
+            console.error('Error parsing JSON:', error);
+        }
+    } else {
+        // Handle case when questionDetails is empty or undefined
+        console.warn('Empty or undefined JSON input');
+    }
+
+    const groupTags = parsedQuestionDetails?.tags.map((tag:any) => tag.name)
     const form = useForm<z.infer<typeof questionSchema>>({
-        resolver: zodResolver(questionSchema),
+        resolver: zodResolver(questionSchema), 
         defaultValues: {
-          title: "",
-          explanation: "",
-          tags: [],
+          title: parsedQuestionDetails?.title || '',
+          explanation: parsedQuestionDetails?.content || '',
+          tags: groupTags || [],
         },
       })
 async function onSubmit(values: z.infer<typeof questionSchema>) {   
    setIsSubmitting(true);
    try {
+     if (type==='Edit') {
+      await  editQuestion({
+         questionId:parsedQuestionDetails._id,
+         title: values.title,
+         content:values.explanation,
+         path:pathname,
+         
+      })
+
+      router.push(`/question/${parsedQuestionDetails._id}`)
+     } else {
       await  createQuestion({
         title:values.title,
         content: values.explanation,
@@ -54,7 +80,10 @@ async function onSubmit(values: z.infer<typeof questionSchema>) {
         path:pathname
         
       })
+
       router.push('/')
+     }
+     
    } catch (error) {
      console.log('error',error);
      
@@ -127,7 +156,7 @@ const handleTagRemove =(tag:string,field:any) => {
                 onInit={(evt, editor) =>
                    // @ts-ignore
                    (editorRef.current = editor)}
-                initialValue="<p></p>"
+                initialValue={parsedQuestionDetails?.content || ''}
                 onBlur={field.onBlur}
                 onEditorChange={(content) => field.onChange(content)}
                 init={{
@@ -164,6 +193,7 @@ const handleTagRemove =(tag:string,field:any) => {
             <FormControl  className="mt-4">
               <>
               <Input 
+              disabled={type ==='Edit'}
               className="no-focus paragraph-regular background-light700_dark300
               light-border-2 text-dark300_light900  min-h-[50px] border" placeholder="Add tags..."
               onKeyDown={(e) => handleInputDown(e,field)}
@@ -175,16 +205,21 @@ const handleTagRemove =(tag:string,field:any) => {
                       <Badge key={tag} className='subtle-regular background-light800_dark300
                       text-light400_light500 items-center justify-center gap-2 rounded-md border-none
                       px-4 py-2 capitalize'
-                      onClick={() => handleTagRemove(tag,field)}
+                      onClick={() =>  type !=='Edit' && handleTagRemove(tag,field)}
                       >
                         {tag}
-                        <Image
-                          src='/assets/icons/close.svg'
-                          alt='close'
-                          width={12}
-                          height={12}
-                          className='cursor-pointer object-contain invert-0 dark:invert'
-                        />  
+                        {
+                          type !=='Edit' && (
+                            <Image
+                            src='/assets/icons/close.svg'
+                            alt='close'
+                            width={12}
+                            height={12}
+                            className='cursor-pointer object-contain invert-0 dark:invert'
+                          /> 
+                          )
+                        }
+                       
                       </Badge>
                     ))}
                   </div>
@@ -204,7 +239,11 @@ const handleTagRemove =(tag:string,field:any) => {
 
       >
         {
-          isSubmitting ? <LoadingOutlined /> : ' Submit'
+          type !=='Edit' ? (
+            isSubmitting ? 'Posting...' : 'Ask a Question'
+          ): (
+            isSubmitting ? 'Editing...' : 'Edit a Question'
+          )
         }
        </Button>
     </form>

@@ -1,17 +1,18 @@
-import { Button } from '@/components/ui/button';
 import { getUserInfo } from '@/lib/actions/user.action';
 import { URLProps } from '@/types';
-import { SignedIn, auth } from '@clerk/nextjs';
+import {  auth } from '@clerk/nextjs';
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getJoinedDate } from '@/lib/utils';
 import ProfileLink from '@/components/shared/ProfileLink';
+import QuestionTab from '@/components/shared/QuestionTab';
+import AnswerTab from '@/components/shared/AnswerTab';
 
 const ProfilePage =async ({params,searchParams}:URLProps) => {
     const userInfo = await  getUserInfo({userId:params.id})
     const {userId:clerkId} = auth()
+    
     return (
         <> 
           <div className='flex flex-col-reverse items-start justify-between sm:flex-row'>
@@ -55,15 +56,17 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                  </div>
               </div>
               <div className='flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3'>
-                   <SignedIn>
+                   {/* <SignedIn>
                       {clerkId === userInfo.user.clerkId && (
                         <Link href='/profile/edit'>
                             <Button className='paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-1'>
-                                Edit profile
                             </Button>
                         </Link>
                       )}
-                   </SignedIn>
+                   </SignedIn> */}
+                   {/* {
+                    clerkId ==='user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && <h2 className='h2-semibold  text-dark300_light700'>Creator</h2>
+                   } */}
               </div>
           </div>
           Stats
@@ -73,8 +76,20 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                 <TabsTrigger className='tab' value="top-posts">Top Posts</TabsTrigger>
                 <TabsTrigger className='tab' value="answers">Answers</TabsTrigger>
             </TabsList>
-            <TabsContent value="top-posts">POSTS</TabsContent>
-            <TabsContent value="answers">ANSWERS</TabsContent>
+            <TabsContent value="top-posts">
+                <QuestionTab
+                searchParams={searchParams}
+                userId={userInfo.user._id}
+                clerkId={clerkId}
+                 />
+            </TabsContent>
+            <TabsContent value="answers" className='flex w-full flex-col gap-6'>
+                <AnswerTab
+                searchParams={searchParams}
+                userId={userInfo.user._id}
+                clerkId={clerkId}
+                 />
+            </TabsContent>
           </Tabs>
           </div>
         </>
