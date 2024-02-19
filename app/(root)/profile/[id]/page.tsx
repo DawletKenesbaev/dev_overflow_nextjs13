@@ -1,6 +1,6 @@
 import { getUserInfo } from '@/lib/actions/user.action';
 import { URLProps } from '@/types';
-import {  auth } from '@clerk/nextjs';
+import {  SignedIn, auth } from '@clerk/nextjs';
 import Image from 'next/image';
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -8,11 +8,11 @@ import { getJoinedDate } from '@/lib/utils';
 import ProfileLink from '@/components/shared/ProfileLink';
 import QuestionTab from '@/components/shared/QuestionTab';
 import AnswerTab from '@/components/shared/AnswerTab';
+import { Button } from '@/components/ui/button';
 
 const ProfilePage =async ({params,searchParams}:URLProps) => {
-    const userInfo = await  getUserInfo({userId:params.id})
     const {userId:clerkId} = auth()
-    
+    const userInfo = await  getUserInfo({userId:params.id})    
     return (
         <> 
           <div className='flex flex-col-reverse items-start justify-between sm:flex-row'>
@@ -28,6 +28,10 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                     <h2 className='h2-bold text-dark100_light900 '>{userInfo.user.name}</h2>
                     <p className='paragraph-regular text-dark200_light800 '>
                         @{userInfo.user.username}
+                        <br></br>
+                        {clerkId === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
+                            <p className='h3-semibold  text-primary-500 '> Creator</p>
+                        )}
                     </p>
                     <div className='mt-5 flex flex-wrap items-center justify-start gap-5'>
                         {userInfo.user.portfolioWebsite && (
@@ -56,17 +60,17 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                  </div>
               </div>
               <div className='flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3'>
-                   {/* <SignedIn>
-                      {clerkId === userInfo.user.clerkId && (
-                        <Link href='/profile/edit'>
-                            <Button className='paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-1'>
+                   <SignedIn>
+                      
+                      {clerkId === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
+                        <a href='https://github.com/DawletKenesbaev'>
+                            <Button
+                             className='paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-1'>
+                                GitHub Link
                             </Button>
-                        </Link>
+                        </a>
                       )}
-                   </SignedIn> */}
-                   {/* {
-                    clerkId ==='user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && <h2 className='h2-semibold  text-dark300_light700'>Creator</h2>
-                   } */}
+                   </SignedIn> 
               </div>
           </div>
           Stats

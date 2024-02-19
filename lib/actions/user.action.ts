@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import Answer from "@/database/answer.model";
+import console from "console";
 
 export async function getUserById(params:any) {
     try {
@@ -197,7 +198,8 @@ export async function getUserInfo(params:GetUserByIdParams) {
     try {
         connectToDatabase()
         const {userId} = params
-        const user  = await User.findOne({clerkid:userId});
+        
+        const user  = await User.findOne({clerkId:userId});
         if (!user) {
             throw new Error("User Not Found");
         }
