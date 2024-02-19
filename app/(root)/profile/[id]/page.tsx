@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 const ProfilePage =async ({params,searchParams}:URLProps) => {
     const {userId:clerkId} = auth()
     const userInfo = await  getUserInfo({userId:params.id})    
+    
     return (
         <> 
           <div className='flex flex-col-reverse items-start justify-between sm:flex-row'>
@@ -29,7 +30,7 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                     <p className='paragraph-regular text-dark200_light800 '>
                         @{userInfo.user.username}
                         <br></br>
-                        {clerkId === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
+                        {params.id === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
                             <p className='h3-semibold  text-primary-500 '> Creator</p>
                         )}
                     </p>
@@ -62,7 +63,7 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
               <div className='flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3'>
                    <SignedIn>
                       
-                      {clerkId === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
+                      {params.id === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
                         <a href='https://github.com/DawletKenesbaev'>
                             <Button
                              className='paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-1'>
