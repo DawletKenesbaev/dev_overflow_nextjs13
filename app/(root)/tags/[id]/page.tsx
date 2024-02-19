@@ -1,7 +1,6 @@
 import QuestionCards from '@/components/cards/QuestionCards'
 import NoResults from '@/components/shared/NoResults'
 import LocalSearchBar from '@/components/shared/search/LocalSearchBar'
-import { IQuestion } from '@/database/question.model'
 import { getQuestionsByTagId } from '@/lib/actions/tag.action'
 import { URLProps } from '@/types'
 import React from 'react'
@@ -29,10 +28,9 @@ const Page = async ({params,searchParams}:URLProps) => {
     <div className="mt-5">
        {
          result?.questions.length>0
-         ? result?.questions.map((item:IQuestion) => {
+         ? result?.questions.map((item:any) => {
           
-          // const authorData = { _id: item.author._id, name: item.author.name, picture: item.author.picture };
-          // const tagsData ={_id :item.tags._id,name:item.tags}
+
           return  <QuestionCards
            key={item._id}  
            _id={item._id}

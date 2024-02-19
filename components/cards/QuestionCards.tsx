@@ -10,12 +10,13 @@ _id: number;
 title: string;
 tags: {
     _id: string;
-    name: string;
+    name: string; 
 }[];
 author: {
     _id:string;
     name:string;
     picture: string;
+    clerkId?:string
 };
 upvotes: number;
 views: number;
@@ -25,8 +26,7 @@ clerkId?:string | null;
 }
 
 const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,clerkId}:QuestionCardsProps) => {
-  const showActionButtons = clerkId && clerkId === author.clerkId
-  
+  const showActionButtons = clerkId && clerkId === author?.clerkId
   return ( 
     <div className='card-wrapper   rounded-[10px] p-9 sm:px-11'>
          <div className='flex
@@ -34,7 +34,7 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,cl
          sm:flex-row '>
             <span className='subtle-regular text-dark400_light700
             line-clamp-1 flex sm:hidden'>
-                 {getTimeStap(createdAt)}
+                 {getTimeStap(createdAt)}~
             </span> 
             <Link href={`/question/${_id}`}>
                <h3 className='sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1'>
