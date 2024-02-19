@@ -18,7 +18,7 @@ const GlobalResult = () => {
          setIsLoading(true)
 
          try {
-            
+            // fetch later
          } catch (error) {
             throw new Error("Fetch data error");
             
@@ -26,6 +26,7 @@ const GlobalResult = () => {
             setIsLoading(false)
          }
       }
+      fetchResult()
     }, [global,type])
 
      const renderLink =(type:string,id:string) => {
