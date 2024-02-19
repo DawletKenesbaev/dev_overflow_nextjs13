@@ -13,10 +13,13 @@ interface Props {
     userId:string;
     totalAnswers:number;
     page?:number;
-    filter:number;
+    filter?:string;
 }
 const AllAnswer = async ({questionId,userId,totalAnswers,page,filter}:Props) => {
-    const result = await getAnswer({questionId})
+    const result = await getAnswer({
+        questionId,
+        sortBy:filter
+    })
   return (
     <div className=' mt-11'>
         <div className='flex items-center justify-between'>
