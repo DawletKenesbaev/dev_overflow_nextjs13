@@ -10,6 +10,7 @@ author: {
     _id:string;
     name:string;
     picture: string;
+    clerkId?: string
 };
 question: {
     _id:string,
