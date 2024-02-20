@@ -7,9 +7,7 @@ import { Button } from '@/components/ui/button'
 import { sidebarLinks } from '@/constants'
 import { usePathname } from 'next/navigation'
 const LeftSideBar = () => {
-  const {userId} = useAuth()
-  console.log(userId);
-  
+  const {userId} = useAuth()  
   const pathname = usePathname() 
   return (
         <div className='background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex 

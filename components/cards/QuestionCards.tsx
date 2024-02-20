@@ -26,7 +26,7 @@ clerkId?:string | null;
 }
 
 const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,clerkId}:QuestionCardsProps) => {
-  const showActionButtons = clerkId && clerkId === author?.clerkId
+  const showActionButtons = clerkId && clerkId === author?.clerkId  
   return ( 
     <div className='card-wrapper   rounded-[10px] p-9 sm:px-11'>
          <div className='flex
@@ -61,7 +61,7 @@ const QuestionCards = ({_id,title,tags,author,upvotes,views,answers,createdAt,cl
              alt='user'
              value={author.name}
              title={` - asked ${getTimeStap(createdAt)}`}
-             href={`/profile/${author._id}`}
+             href={`/profile/${author.clerkId}`}
              isAuthor
              textStyles='body-medium text-dark400_light700'
               />

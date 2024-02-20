@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 const ProfilePage =async ({params,searchParams}:URLProps) => {
     const {userId:clerkId} = auth()
     const userInfo = await  getUserInfo({userId:params.id})    
+    console.log(clerkId);
     
     return (
         <> 
@@ -53,18 +54,18 @@ const ProfilePage =async ({params,searchParams}:URLProps) => {
                         imgUrl='/assets/icons/calendar.svg'
                         />
                     </div>
-                    {userInfo.user.bio &&  (
+                    {/* {userInfo.user.bio &&  (
                         <p className='paragraph-regular text-dark400_light800 mt-8 '>
                             {userInfo.user.bio}
                         </p>
-                    )}
+                    )} */}
                  </div>
               </div>
               <div className='flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3'>
                    <SignedIn>
                       
                       {params.id === 'user_2cWZ1XxOFfU77Ci1ikR7KxD6FXV' && (
-                        <a href='https://github.com/DawletKenesbaev'>
+                        <a target='_blank' href='https://github.com/DawletKenesbaev'>
                             <Button
                              className='paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-1'>
                                 GitHub Link
