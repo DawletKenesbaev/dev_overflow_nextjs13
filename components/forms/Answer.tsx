@@ -23,6 +23,7 @@ const Answer = ({question,questionId,authorId}:Props) => {
   const pathname = usePathname()
   const [editorKey, setEditorKey] = useState(0);
   const {mode} = useTheme()
+  const [isSubmittingAI,setIsSubmittingAI] = useState(false)
   const [isSubmitting,setIsSubmitting] = useState(false)
   const toggleEditorKey = () => {
     setEditorKey((prevKey) => prevKey + 1);
@@ -61,11 +62,40 @@ const Answer = ({question,questionId,authorId}:Props) => {
       setIsSubmitting(false)
     }
   }
+  const generateAIAnswer  = async () =>{    
+     if (!authorId) return;
+     setIsSubmittingAI(true )
+     try {
+       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+       {   
+        method:'POST',
+        body: JSON.stringify({question})
+
+       })
+       const aiAnswer = await response.json()
+
+       const formattedAnswer  = aiAnswer.reply.replace(/\n/g, '<br />')
+
+       if (editorRef.current) {
+          const editor = editorRef.current as any
+          editor.setContent(formattedAnswer)
+       } 
+       setIsSubmittingAI(false)
+       // toast
+
+     } catch (error) {
+      
+     } finally {
+      setIsSubmittingAI(false)
+     }
+  }
   return (
     <div>
       <div className='flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2'>
         <h4 className='paragraph-semibold text-dark400_light800'>Write your answer here</h4>
-        <Button className=' btn light-border-2 gap-2 rounded-md px-4 py-3 text-primary-500 shadow-none dark:text-primary-500 '>
+        <Button 
+        onClick={generateAIAnswer}
+        className=' btn light-border-2 gap-2 rounded-md px-4 py-3 text-primary-500 shadow-none dark:text-primary-500 '>
           <Image
            src='/assets/icons/stars.svg'
            alt='star'
@@ -73,7 +103,7 @@ const Answer = ({question,questionId,authorId}:Props) => {
            height={12}
            className=' object-contain'
            />
-           Generate AI answer
+           {isSubmittingAI ? 'Generating...':'Generate AI answer'}
         </Button>
       </div>
         <Form {...form}>
