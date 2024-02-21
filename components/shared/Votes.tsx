@@ -7,6 +7,7 @@ import { formatNumber } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname ,useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
+import { toast } from '../ui/use-toast';
 interface Props {
   type:string;
   itemId:string;
@@ -27,12 +28,18 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
       questionId:JSON.parse(itemId),
       path:pathname
     })
-    
+    return toast({
+      title:`Question ${!hasSaved ? 'Saved in' : 'Removed from'} your collection`,
+      variant: !hasSaved ?'default':'destructive'
+    });
 
   }
   const handleVote =async  (votetype:string) => {
     if (!userId) {
-      return;
+      return toast({
+        title:'Please Login In',
+        description:'You must be Log in to perform this action'
+      });
     }
     if (votetype === 'upvote') {
       if (type === 'Question') {
@@ -52,7 +59,10 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
           path:pathname
         }) 
       }
-      return;
+      return toast({
+        title:`Upvote ${!hasupVoted ? 'Succesful' : 'Removed'}`,
+        variant: !hasupVoted ?'default':'destructive'
+      });
     }
     if (votetype ==='downvote') {
       if (type === 'Question') {
@@ -72,6 +82,10 @@ const Votes = ({type,itemId,userId,upvotes,downvotes,hasdownVoted,hasSaved,hasup
           path:pathname
         }) 
       }
+      return toast({
+        title:`DownVote ${!hasupVoted ? 'Succesful' : 'Removed'}`,
+        variant: !hasupVoted ?'default':'destructive'
+      });
     }
   }
   useEffect(() => {

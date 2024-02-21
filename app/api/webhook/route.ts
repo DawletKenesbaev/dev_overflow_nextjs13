@@ -72,5 +72,5 @@ if (eventType === 'user.updated') {
     return NextResponse.json({message:'Ok', deletedUser})
   }
  
-  return new Response('', { status: 200 })
+  return  NextResponse.json({ message: 'OK' })
   }

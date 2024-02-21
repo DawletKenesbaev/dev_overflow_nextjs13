@@ -9,7 +9,12 @@ import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
  
-
+import type { Metadata } from "next";
+export const metadata:Metadata ={
+  title:'Home | Dev OverFlow',
+  description:'Dev OverFlow is a community of 100.000 + developers .Join Us.',
+  
+}
  
 export default async function Home({searchParams}:SearchParamsProps) {
   const defaultValue = {

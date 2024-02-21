@@ -12,6 +12,7 @@ import {LoadingOutlined } from '@ant-design/icons'
 import Image from 'next/image'
 import { createAnswer } from '@/lib/actions/answer.action'
 import { usePathname } from 'next/navigation'
+import { toast } from '../ui/use-toast'
 
 interface Props {
   question:string;
@@ -55,6 +56,9 @@ const Answer = ({question,questionId,authorId}:Props) => {
           const editor = editorRef.current as any;
           editor.setContent('')
       }
+      return toast({
+        title:'Your answered the question'
+      });     
     } catch (error) {
       console.log(error);
       
@@ -81,8 +85,10 @@ const Answer = ({question,questionId,authorId}:Props) => {
           editor.setContent(formattedAnswer)
        } 
        setIsSubmittingAI(false)
-       // toast
-
+      return toast({
+        title:'Your answer generated',
+        description:''
+      });         
      } catch (error) {
       
      } finally {
@@ -91,7 +97,7 @@ const Answer = ({question,questionId,authorId}:Props) => {
   }
   return (
     <div>
-      <div className='flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2'>
+      <div className='mt-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2'>
         <h4 className='paragraph-semibold text-dark400_light800'>Write your answer here</h4>
         <Button 
         onClick={generateAIAnswer}
